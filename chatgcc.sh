@@ -1,20 +1,85 @@
-# Try a custom prompt here
+#!/bin/bash
 
-prompt="
-You are a C compiler targeting x86_64 assembly. Generate assembly code with the following specifications:
+# Detect OS and architecture
+OS_TYPE=$(uname -s)
+ARCH_TYPE=$(uname -m)
+
+# Template for the prompt with placeholders
+TEMPLATE="You are a C compiler targeting {ARCH} assembly for {OS}. Generate assembly code with the following specifications:
 - Make sure you include the _start entry symbol
-- Use AT&T/GAS syntax (default GNU assembler syntax)
+- Use {SYNTAX} syntax ({SYNTAX_DESC})
 - Include necessary sections (.text, .data, etc.)
-- Include proper function prologue/epilogue
+- Include proper function prologue/epilogue following {ABI} ABI
 - Handle C standard library functions appropriately
-- Include comments explaining key operations
-- Target Linux x86_64 platform
+- If syscalls are needed, use {SYSCALL_MECHANISM} for syscalls
 - If you are using a 'call' command, ensure you include the necessary references to the syscall you are making
-"
+- Your output will be extracted from a code block formatted as \`\`\`assembly ... \`\`\`
+- This output will be assembled using 'as' and linked using 'ld'
+— ensure it compiles without additional modifications"
 
+# Default values (fallback for unknown systems)
+ARCH="an unknown architecture"
+OS="an unknown OS"
+SYNTAX="AT&T/GAS"
+SYNTAX_DESC="default GNU assembler syntax"
+ABI="a generic"
+SYSCALL_MECHANISM="a platform-specific method (try your best!)"
+
+# Define settings for known architectures
+if [[ "$OS_TYPE" == "Linux" && "$ARCH_TYPE" == "x86_64" ]]; then
+    ARCH="x86_64"
+    OS="Linux"
+    ABI="the Linux x86_64"
+    SYSCALL_MECHANISM="the syscall instruction"
+
+elif [[ "$OS_TYPE" == "Linux" && "$ARCH_TYPE" == "aarch64" ]]; then
+    ARCH="ARM64 (AArch64)"
+    OS="Linux"
+    ABI="the Linux ARM64"
+    SYSCALL_MECHANISM="svc #0"
+
+elif [[ "$OS_TYPE" == "Darwin" && "$ARCH_TYPE" == "x86_64" ]]; then
+    ARCH="x86_64"
+    OS="macOS"
+    ABI="the macOS x86_64"
+    SYSCALL_MECHANISM="syscall (instead of int 0x80)"
+
+elif [[ "$OS_TYPE" == "Darwin" && "$ARCH_TYPE" == "arm64" ]]; then
+    ARCH="ARM64 (AArch64)"
+    OS="macOS"
+    ABI="the macOS ARM64"
+    SYSCALL_MECHANISM="svc #0"
+
+else
+    # Unknown platform - provide encouragement
+    TEMPLATE="Okay, I'm not sure what platform you're on, but let's give it a shot anyway. Here’s what I know:
+- OS: $OS_TYPE
+- Arch: $ARCH_TYPE
+
+You're a C compiler, and compilers improvise, adapt, and overcome.  
+Generate assembly code with these general rules:
+- Include an _start entry symbol.
+- Use {SYNTAX} syntax ({SYNTAX_DESC}).
+- Use the right calling conventions (good luck).
+- Include necessary sections (.text, .data, etc.).
+- Add function prologue/epilogue (if applicable).
+- Handle C standard library calls correctly (or do your best).
+- If syscalls are needed, use {SYSCALL_MECHANISM}.
+- If you are using a 'call' command, ensure you include the necessary references to the syscall you are making.
+- Your output will be extracted from a code block formatted as \`\`\`assembly ... \`\`\`
+- This output will be assembled using 'as' and linked using 'ld'
+— ensure it compiles without additional modifications.
+
+I have no clue if this will work. But you got this. 🚀"
+fi
+
+# Replace placeholders in the template using `|` as a delimiter
+prompt=$(echo "$TEMPLATE" | sed -E "s|{ARCH}|$ARCH|g" | sed -E "s|{OS}|$OS|g" | sed -E "s|{SYNTAX}|$SYNTAX|g" | sed -E "s|{SYNTAX_DESC}|$SYNTAX_DESC|g" | sed -E "s|{ABI}|$ABI|g" | sed -E "s|{SYSCALL_MECHANISM}|$SYSCALL_MECHANISM|g")
+
+# Use the determined prompt
 model="gpt-4o"
 
-# Lots of annoying details to interface with openai api
+# Lots of annoying details to interface with OpenAI API
 
 if [ -z "$1" ]; then
     echo "Usage: $0 <c program>"
