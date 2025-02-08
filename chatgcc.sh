@@ -70,6 +70,7 @@ run_id=$(curl https://api.openai.com/v1/threads/$thread_id/runs \
 	-H "Authorization: Bearer $OPENAI_API_KEY" \
 	-H "Content-Type: application/json" \
 	-H "OpenAI-Beta: assistants=v2" \
+	-s \
 	-d "$json_payload" | grep -o '"id": "[^"]*' | cut -d'"' -f4)
 
 status="queued"
