@@ -76,8 +76,6 @@ fi
 # Replace placeholders in the template using `|` as a delimiter
 prompt=$(echo "$TEMPLATE" | sed -e "s|{ARCH}|$ARCH|g" | sed -e "s|{OS}|$OS|g" | sed -e "s|{SYNTAX}|$SYNTAX|g" | sed -e "s|{SYNTAX_DESC}|$SYNTAX_DESC|g" | sed -e "s|{ABI}|$ABI|g" | sed -e "s|{SYSCALL_MECHANISM}|$SYSCALL_MECHANISM|g")
 
-echo $prompt
-
 # Use the determined prompt
 model="gpt-4o"
 
