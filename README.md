@@ -1,6 +1,6 @@
 # chatgcc
 
-A cursed C compiler
+A cursed C compiler. A joke/art project, dear god don't use this in production.
 
 ## Usage
 ```sh
@@ -21,5 +21,5 @@ The top of `chatgcc.sh` includes a number of variables you can tune, including t
 
 ## Available work
 
-Currently, this "compiler" can only linke to the C standard library. It might be possible to ask ChatGPT to also
-generate the linking flags for `gcc` to generate the executable.
+Currently, this "compiler" can only linke to the C standard library. It's likely we can get ChatGPT to also
+generate the linking flags for `gcc` to build the executable.
