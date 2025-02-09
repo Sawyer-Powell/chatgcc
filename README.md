@@ -6,7 +6,7 @@ A cursed C compiler. A joke/art project, dear god don't use this in production.
 ```sh
 export OPENAI_API_KEY="sk-..."
 chmod +x chatgcc
-chatgcc test.c
+./chatgcc test.c
 ``````
 
 `chatgcc` will ask ChatGPT to generate either x86_64 or ARM64 assembly based on your platform. 
@@ -21,5 +21,5 @@ The top of `chatgcc.sh` includes a number of variables you can tune, including t
 
 ## Available work
 
-Currently, this "compiler" can only linke to the C standard library. It's likely we can get ChatGPT to also
+Currently, this "compiler" can only link to the C standard library. It's likely we can get ChatGPT to also
 generate the linking flags for `gcc` to build the executable.
