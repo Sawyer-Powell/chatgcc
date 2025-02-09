@@ -7,6 +7,7 @@ A cursed C compiler
 export OPENAI_API_KEY="sk-..."
 chmod +x chatgcc
 chatgcc test.c
+``````
 
 `chatgcc` will ask ChatGPT to generate either x86_64 or ARM64 assembly based on your platform. 
 It will also ask ChatGPT to make the assembly platform compatible if you are using a Linux or Mac computer
