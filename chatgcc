@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Detect OS and architecture
-OS_TYPE=$(uname -s)
-ARCH_TYPE=$(uname -m)
-
 # Template for the prompt with placeholders
 TEMPLATE="You are a C compiler targeting {ARCH} assembly for {OS}. Generate assembly code with the following specifications:
 - Make sure you include the main entry symbol for C interop
@@ -16,6 +12,13 @@ TEMPLATE="You are a C compiler targeting {ARCH} assembly for {OS}. Generate asse
 - Your output will be extracted from a code block formatted as \`\`\`assembly ... \`\`\`
 - This output will be assembled using 'as' and linked using 'gcc'
 — ensure it compiles without additional modifications"
+
+# Use the determined prompt
+model="gpt-4o"
+
+# Detect OS and architecture
+OS_TYPE=$(uname -s)
+ARCH_TYPE=$(uname -m)
 
 # Default values (fallback for unknown systems)
 ARCH="an unknown architecture"
@@ -76,8 +79,6 @@ fi
 # Replace placeholders in the template using `|` as a delimiter
 prompt=$(echo "$TEMPLATE" | sed -e "s|{ARCH}|$ARCH|g" | sed -e "s|{OS}|$OS|g" | sed -e "s|{SYNTAX}|$SYNTAX|g" | sed -e "s|{SYNTAX_DESC}|$SYNTAX_DESC|g" | sed -e "s|{ABI}|$ABI|g" | sed -e "s|{SYSCALL_MECHANISM}|$SYSCALL_MECHANISM|g")
 
-# Use the determined prompt
-model="gpt-4o"
 
 # Lots of annoying details to interface with OpenAI API
 
