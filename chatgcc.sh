@@ -56,19 +56,19 @@ else
 - OS: $OS_TYPE
 - Arch: $ARCH_TYPE
 
-You're a C compiler, and compilers improvise, adapt, and overcome.  
+You're a C compiler, and compilers improvise, adapt, and overcome
 Generate assembly code with these general rules:
-- Include an _start entry symbol.
-- Use {SYNTAX} syntax ({SYNTAX_DESC}).
-- Use the right calling conventions (good luck).
-- Include necessary sections (.text, .data, etc.).
-- Add function prologue/epilogue (if applicable).
-- Handle C standard library calls correctly (or do your best).
-- If syscalls are needed, use {SYSCALL_MECHANISM}.
-- If you are using a 'call' command, ensure you include the necessary references to the syscall you are making.
+- Make sure you include the main entry symbol for C interop
+- Use {SYNTAX} syntax ({SYNTAX_DESC})
+- Use the right calling conventions (good luck)
+- Include necessary sections (.text, .data, etc.)
+- Include proper function prologue/epilogue (if applicable)
+- Handle C standard library functions appropriately (or do your best).
+- If syscalls are needed, use {SYSCALL_MECHANISM}
+- If you are using a 'call' command, ensure you include the necessary references to the syscall you are making
 - Your output will be extracted from a code block formatted as \`\`\`assembly ... \`\`\`
 - This output will be assembled using 'as' and linked using 'gcc'
-— ensure it compiles without additional modifications.
+— ensure it compiles without additional modifications
 
 I have no clue if this will work. But you got this. 🚀"
 fi
