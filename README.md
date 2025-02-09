@@ -17,7 +17,7 @@ It will also ask ChatGPT to make the assembly platform compatible if you are usi
 
 ## Modifying
 
-The top of `chatgcc.sh` includes a number of variables you can tune, including the prompt sent to OpenAI, and the model.
+The top of `chatgcc` includes a number of variables you can tune, including the prompt sent to OpenAI, and the model.
 
 ## Available work
 
