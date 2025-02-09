@@ -5,6 +5,7 @@ A cursed C compiler
 ## Usage
 ```sh
 export OPENAI_API_KEY="sk-..."
+chmod +x chatgcc
 chatgcc test.c
 ```
 The program will call OpenAI and save its x86_64 assembly program to `test.asm`. The program will also attempt to assemble that file, and link it.
