@@ -132,7 +132,7 @@ if [ "$verbose" = true ]; then
 	echo "$thread_id"
 fi
 
-escaped_content=$(cat "$1" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/\r/\\r/g' | sed 's/\t/\\t/g')
+escaped_content=$(sed 's/\\/\\\\/g' < "$1" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/\r/\\r/g' | sed 's/\t/\\t/g')
 
 json_payload="{\"role\":\"user\",\"content\":\"$escaped_content\"}"
 
@@ -154,7 +154,7 @@ fi
 escaped_prompt=$(echo "$prompt" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/\r/\\r/g' | sed 's/\t/\\t/g')
 json_payload="{\"assistant_id\":\"$assistant_id\",\"instructions\":\"$escaped_prompt\"}"
 
-run_id=$(curl https://api.openai.com/v1/threads/$thread_id/runs \
+run_id=$(curl "https://api.openai.com/v1/threads/${thread_id}/runs" \
 	-H "Authorization: Bearer $OPENAI_API_KEY" \
 	-H "Content-Type: application/json" \
 	-H "OpenAI-Beta: assistants=v2" \
@@ -172,7 +172,7 @@ i=0
 while [[ "$status" == "queued" || "$status" == "in_progress" ]]; do
 	echo -ne "\rgenerating assembly${dots[$((i % 3))]}   \b\b\b"
 
-	status=$(curl https://api.openai.com/v1/threads/$thread_id/runs/$run_id \
+	status=$(curl "https://api.openai.com/v1/threads/${thread_id}/runs/${run_id}" \
 		-H "Authorization: Bearer $OPENAI_API_KEY"\
 		-s \
 		-H "OpenAI-Beta: assistants=v2" | grep -o '"status": "[^"]*' | cut -d'"' -f4)
@@ -180,13 +180,13 @@ while [[ "$status" == "queued" || "$status" == "in_progress" ]]; do
 	i=$((i + 1))
 done
 
-if [ verbose == true ]; then
+if [ "$verbose" = true ]; then
 	echo "Retrieving response"
 fi
 
 # Trying to compile the response from the AI
 
-assembly=$(curl https://api.openai.com/v1/threads/$thread_id/messages \
+assembly=$(curl "https://api.openai.com/v1/threads/${thread_id}/messages" \
 	-H "Content-Type: application/json" \
 	-H "Authorization: Bearer $OPENAI_API_KEY" \
 	-s \
